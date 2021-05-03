@@ -400,7 +400,7 @@ is_connected(C) ->
 callback(C, message, Module, Function) ->
   gen_server:call(C, {callback_mo, Module, Function});
 callback(C, delivery_receipt, Module, Function) ->
-  gen_server:call(C, {callback_dr, Module, Function});
+  gen_server:call(C, {callback_dr, Module, Function}).
 callback(_C, _Unknown, _Module, _Function) ->
   {error, invalid_type}.
 
