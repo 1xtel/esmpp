@@ -400,7 +400,7 @@ is_connected(C) ->
 callback(C, message, Module, Function) ->
   gen_server:call(C, {callback_mo, Module, Function});
 callback(C, delivery_receipt, Module, Function) ->
-  gen_server:call(C, {callback_dr, Module, Function}).
+  gen_server:call(C, {callback_dr, Module, Function});
 callback(_C, _Unknown, _Module, _Function) ->
   {error, invalid_type}.
 
@@ -415,9 +415,9 @@ unbind(C) ->
 
 %% @private
 send_sm(C, Sm, Message, DataCoding) when DataCoding =:= 0, size(Message) =< 160 ->
-  [gen_server:call(C, {submit_sm, Sm})];
+  [gen_server:call(C, {submit_sm, Sm}, infinity)];
 send_sm(C, Sm, Message, DataCoding) when DataCoding =:= 8, size(Message) =< 140 ->
-  [gen_server:call(C, {submit_sm, Sm})];
+  [gen_server:call(C, {submit_sm, Sm}, infinity)];
 send_sm(C, Sm, Message, DataCoding) when DataCoding =:= 0 ->
   Ref   = random:uniform(255),
   Size  = size(Message),
@@ -443,7 +443,7 @@ send_sm(C, Sm, Str, Tail, Ref, Part, Parts, Limit, Acc) ->
     sm_length     = Length,
     short_message = Message
   },
-  NewAcc = Acc ++ [gen_server:call(C, {submit_sm, NewSm})],
+  NewAcc = Acc ++ [gen_server:call(C, {submit_sm, NewSm}, infinity)],
   send_sm(C, NewSm, Tail, <<>>, Ref, Part + 1, Parts, Limit, NewAcc).
    
 %% @private
